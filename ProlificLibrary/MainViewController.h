@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MainViewController : UITableViewController
+@interface MainViewController : UITableViewController <UIActionSheetDelegate>
 
-@property (strong, nonatomic) NSMutableArray    *bookList;
+@property (strong, nonatomic) NSMutableArray        *bookList;
 
 @end
 
