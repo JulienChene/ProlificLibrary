@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="jd0-oi-V6G">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2At-6a-xcH">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Main View Controller-->
+        <!--Books-->
         <scene sceneID="ccE-eU-iw9">
             <objects>
                 <tableViewController id="jd0-oi-V6G" customClass="MainViewController" sceneMemberID="viewController">
@@ -21,21 +21,21 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BookNameLabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AEZ-NX-c9S">
-                                            <rect key="frame" x="13" y="2" width="484" height="20"/>
+                                            <rect key="frame" x="13" y="2" width="508" height="20"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BookAuthorLabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="red-iN-HzH">
-                                            <rect key="frame" x="13" y="23" width="484" height="17"/>
+                                            <rect key="frame" x="13" y="23" width="508" height="17"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StockLabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lvw-UO-EYw">
-                                            <rect key="frame" x="505" y="12" width="87" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StockLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lvw-UO-EYw">
+                                            <rect key="frame" x="529" y="12" width="70" height="21"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="87" id="Oqu-re-Vi3"/>
+                                                <constraint firstAttribute="width" constant="70" id="Oqu-re-Vi3"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -45,12 +45,12 @@
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="Lvw-UO-EYw" secondAttribute="centerY" constant="1" id="Ez1-ze-DoO"/>
                                         <constraint firstItem="AEZ-NX-c9S" firstAttribute="leading" secondItem="MJJ-6V-sch" secondAttribute="leadingMargin" constant="5" id="QYZ-d9-bhw"/>
-                                        <constraint firstItem="Lvw-UO-EYw" firstAttribute="trailing" secondItem="MJJ-6V-sch" secondAttribute="trailingMargin" id="SpL-jq-R4j"/>
                                         <constraint firstItem="AEZ-NX-c9S" firstAttribute="top" secondItem="MJJ-6V-sch" secondAttribute="top" constant="2" id="YAL-qP-dEO"/>
                                         <constraint firstItem="red-iN-HzH" firstAttribute="top" secondItem="AEZ-NX-c9S" secondAttribute="bottom" constant="1" id="kpi-hV-ver"/>
                                         <constraint firstItem="Lvw-UO-EYw" firstAttribute="leading" secondItem="AEZ-NX-c9S" secondAttribute="trailing" constant="8" id="lxy-Nb-drA"/>
                                         <constraint firstItem="Lvw-UO-EYw" firstAttribute="leading" secondItem="red-iN-HzH" secondAttribute="trailing" constant="8" id="op7-Ir-ccH"/>
                                         <constraint firstItem="red-iN-HzH" firstAttribute="leading" secondItem="MJJ-6V-sch" secondAttribute="leadingMargin" constant="5" id="wxu-pB-Koy"/>
+                                        <constraint firstAttribute="trailing" secondItem="Lvw-UO-EYw" secondAttribute="trailing" constant="1" id="xsu-Zt-8dM"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -60,10 +60,11 @@
                             <outlet property="delegate" destination="jd0-oi-V6G" id="OR1-40-X3G"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Books" id="0xP-jR-sdn"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Byl-Mv-k1t" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="181" y="133"/>
+            <point key="canvasLocation" x="993" y="133"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Dgu-AJ-wLu">
@@ -93,7 +94,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mCM-rn-XO3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="947.99999999999989" y="136"/>
+            <point key="canvasLocation" x="1759" y="136"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="SiI-Sa-sfL">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2At-6a-xcH" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="4Gq-XT-rL2">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="jd0-oi-V6G" kind="relationship" relationship="rootViewController" id="Yec-yO-BIc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4Ub-jE-TOt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="181" y="133"/>
         </scene>
     </scenes>
 </document>
