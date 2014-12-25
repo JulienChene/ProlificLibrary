@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface MainViewController : UITableViewController
 
+@property (strong, nonatomic) NSMutableArray    *bookList;
 
 @end
 

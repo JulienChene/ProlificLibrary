@@ -12,6 +12,7 @@
 
 @synthesize bookAuthor;
 @synthesize bookCategories;
+@synthesize bookLastCheckIn;
 @synthesize bookLastCheckedOut;
 @synthesize bookLastCheckedOutBy;
 @synthesize bookPublisher;
@@ -32,6 +33,7 @@
     {
         [self setBookAuthor:author];
         [self setBookCategories:categories];
+        [self setBookLastCheckIn:nil];
         [self setBookLastCheckedOut:lastCheckOut];
         [self setBookLastCheckedOutBy:lastCheckOutBy];
         [self setBookPublisher:publisher];

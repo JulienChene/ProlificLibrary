@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) NSString  *bookAuthor;
 @property (strong, nonatomic) NSString  *bookCategories;
+@property (assign, nonatomic) NSDate    *bookLastCheckIn;
 @property (strong, nonatomic) NSDate    *bookLastCheckedOut;
 @property (strong, nonatomic) NSString  *bookLastCheckedOutBy;
 @property (strong, nonatomic) NSString  *bookPublisher;
