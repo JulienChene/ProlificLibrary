@@ -19,6 +19,7 @@
 @synthesize bookTitle;
 @synthesize bookURL;
 @synthesize bookAvailability;
+@synthesize bookID;
 
 - (id)initWithAuthor:(NSString*) author
        andCategories:(NSString*) categories
@@ -28,6 +29,7 @@
             andTitle:(NSString*) title
               andURL:(NSString*) URL
      andAvailability:(int) availability
+               andID:(int) ID
 {
     self = [super init];
     

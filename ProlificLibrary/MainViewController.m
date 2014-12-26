@@ -10,6 +10,10 @@
 #import "Book.h"
 #import "MainViewController.h"
 
+NSString *const kAuthorSort = @"SortByAuthor";
+NSString *const kTitleSort = @"SortByTitle";
+NSString *const kAvailabilitySort = @"SortByAvailability";
+
 @interface MainViewController ()
 
 @end
@@ -18,11 +22,14 @@
 
 @synthesize bookList;
 
+// TODO : Clean files, Availability sort, check if book already exists when adding.
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
     bookList = [[NSMutableArray alloc] init];
+    sortingType = @"None";
     
     [self retrieveBooks];
 }
@@ -31,6 +38,13 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+
+
+
+
+#pragma mark - Book List Processing
 
 - (int)isInStockWithLastCheckIn:(NSDate*)lastCheckIn andLastCheckOut:(NSDate*)lastCheckOut
 {
@@ -61,8 +75,9 @@
         
         if (!isBookExisting)
         {
+            // Enables to deal with the null value sent by the server
             NSDate *checkedOutDate = nil;
-            NSString *checkedOutBy = nil;
+            NSString *checkedOutBy = @"";
             
             if (![[dict objectForKey:@"lastCheckedOut"] isKindOfClass:[NSNull class]])
                 checkedOutDate = [dict objectForKey:@"lastCheckedOut"];
@@ -77,12 +92,36 @@
                                             andPublisher:[dict objectForKey:@"publisher"]
                                                 andTitle:[dict objectForKey:@"title"]
                                                   andURL:[dict objectForKey:@"url"]
-                                         andAvailability:[self isInStockWithLastCheckIn:nil andLastCheckOut:checkedOutDate]];
+                                         andAvailability:[self isInStockWithLastCheckIn:nil andLastCheckOut:checkedOutDate]
+                                                   andID:(int)[dict objectForKey:@"id"]];
             
             [bookList addObject:newBook];
         }
     }
 }
+
+- (void)sortListBy:(NSString*)type
+{
+    if ([type isEqualToString:kAuthorSort])
+        [bookList sortUsingComparator:^NSComparisonResult (id obj1, id obj2){
+            Book *firstBook = (Book*) obj1;
+            Book *secondBook = (Book*) obj2;
+            
+            return [[firstBook bookAuthor] compare:[secondBook bookAuthor]];
+        }];
+    else
+        if ([type isEqualToString:kTitleSort])
+            [bookList sortUsingComparator:^NSComparisonResult (id obj1, id obj2){
+                Book *firstBook = (Book*) obj1;
+                Book *secondBook = (Book*) obj2;
+            
+                return [[firstBook bookTitle] compare:[secondBook bookTitle]];
+            }];
+    else
+        if ([type isEqualToString:kAvailabilitySort])
+            NSLog(@"Availability sort");
+}
+
 
 
 
@@ -138,6 +177,20 @@
 
 
 
+
+#pragma mark - UITableViewController Delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self performSegueWithIdentifier:@"BookDetailSegue" sender:self];
+}
+
+
+
+
+
+
+
 #pragma mark - Action Sheet
 
 - (IBAction)organizeList:(id)sender
@@ -159,13 +212,8 @@
     // Sort by author
     if (buttonIndex == 1)
     {
-        NSLog(@"author");
-        [bookList sortUsingComparator:^NSComparisonResult (id obj1, id obj2){
-            Book *firstBook = (Book*) obj1;
-            Book *secondBook = (Book*) obj2;
-            
-            return [[firstBook bookAuthor] compare:[secondBook bookAuthor]];
-        }];
+        sortingType = kAuthorSort;
+        [self sortListBy:kAuthorSort];
         
         [self.tableView reloadData];
     }
@@ -173,12 +221,8 @@
     // Sort by title
     if (buttonIndex == 2)
     {
-        [bookList sortUsingComparator:^NSComparisonResult (id obj1, id obj2){
-            Book *firstBook = (Book*) obj1;
-            Book *secondBook = (Book*) obj2;
-            
-            return [[firstBook bookTitle] compare:[secondBook bookTitle]];
-        }];
+        sortingType = kTitleSort;
+        [self sortListBy:kTitleSort];
         
         [self.tableView reloadData];
     }
@@ -186,9 +230,57 @@
     // Sort by availability
     if (buttonIndex == 3)
     {
-        NSLog(@"sort by availability");
+        sortingType = kAvailabilitySort;
+        [self sortListBy:kAvailabilitySort];
+        
+        [self.tableView reloadData];
     }
 }
+
+
+
+
+
+#pragma mark - AddBookViewController Delegate
+
+- (void)addBookWithBook:(Book *)book
+{
+    [bookList addObject:book];
+    
+    [self sortListBy:sortingType];
+    [self.tableView reloadData];
+}
+
+
+
+
+
+
+
+#pragma mark - Segue handling
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"AddBookSegue"])
+    {
+        AddBookViewController *addBookViewController = (AddBookViewController*)[segue destinationViewController];
+        
+        int maxID = 1;
+        
+        for (Book *book in bookList)
+        {
+            if ([book bookID] > maxID)
+                maxID = [book bookID];
+        }
+        
+        [addBookViewController setDelegate:self];
+        [addBookViewController setCurrentID:maxID];
+    }
+}
+
+
+
+
 
 
 

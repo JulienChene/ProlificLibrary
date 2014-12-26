@@ -33,6 +33,7 @@
 		D46E82281A4C61A000375A6C /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E82161A4C61A000375A6C /* UIRefreshControl+AFNetworking.m */; };
 		D46E82291A4C61A000375A6C /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E82181A4C61A000375A6C /* UIWebView+AFNetworking.m */; };
 		D46E822E1A4CD15400375A6C /* AddBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E822D1A4CD15400375A6C /* AddBookViewController.m */; };
+		D46E82311A4DA81100375A6C /* BookDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E82301A4DA81100375A6C /* BookDetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,8 @@
 		D46E82181A4C61A000375A6C /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
 		D46E822C1A4CD15400375A6C /* AddBookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddBookViewController.h; sourceTree = "<group>"; };
 		D46E822D1A4CD15400375A6C /* AddBookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddBookViewController.m; sourceTree = "<group>"; };
+		D46E822F1A4DA81100375A6C /* BookDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookDetailViewController.h; sourceTree = "<group>"; };
+		D46E82301A4DA81100375A6C /* BookDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookDetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +147,8 @@
 				D4346CB11A46DBC8001FAFE1 /* AppDelegate.m */,
 				D46E822C1A4CD15400375A6C /* AddBookViewController.h */,
 				D46E822D1A4CD15400375A6C /* AddBookViewController.m */,
+				D46E822F1A4DA81100375A6C /* BookDetailViewController.h */,
+				D46E82301A4DA81100375A6C /* BookDetailViewController.m */,
 				D4346CB31A46DBC8001FAFE1 /* MainViewController.h */,
 				D4346CB41A46DBC8001FAFE1 /* MainViewController.m */,
 				D4346CD51A46DCEF001FAFE1 /* Book.h */,
@@ -353,6 +358,7 @@
 				D46E821C1A4C61A000375A6C /* AFNetworkReachabilityManager.m in Sources */,
 				D46E82201A4C61A000375A6C /* AFURLResponseSerialization.m in Sources */,
 				D46E82291A4C61A000375A6C /* UIWebView+AFNetworking.m in Sources */,
+				D46E82311A4DA81100375A6C /* BookDetailViewController.m in Sources */,
 				D46E82211A4C61A000375A6C /* AFURLSessionManager.m in Sources */,
 				D46E82221A4C61A000375A6C /* AFNetworkActivityIndicatorManager.m in Sources */,
 				D4346CAF1A46DBC8001FAFE1 /* main.m in Sources */,

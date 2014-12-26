@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AddBookViewController.h"
 
-@interface MainViewController : UITableViewController <UIActionSheetDelegate>
+@interface MainViewController : UITableViewController <UIActionSheetDelegate, AddBookViewControllerDelegate>
+{
+    NSString *sortingType;
+}
 
-@property (strong, nonatomic) NSMutableArray        *bookList;
+@property (strong, nonatomic) NSMutableArray    *bookList;
 
 @end
 

@@ -19,6 +19,7 @@
 @property (strong, nonatomic) NSString  *bookTitle;
 @property (strong, nonatomic) NSString  *bookURL;
 @property (assign, nonatomic) int       bookAvailability;
+@property (assign, nonatomic) int       bookID;
 
 - (id)initWithAuthor:(NSString*) author
        andCategories:(NSString*) categories
@@ -27,6 +28,7 @@
         andPublisher:(NSString*) publisher
             andTitle:(NSString*) title
               andURL:(NSString*) URL
-     andAvailability:(int) availability;
+     andAvailability:(int) availability
+               andID:(int) ID;
 
 @end
