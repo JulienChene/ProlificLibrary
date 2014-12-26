@@ -32,6 +32,7 @@
 		D46E82271A4C61A000375A6C /* UIProgressView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E82141A4C61A000375A6C /* UIProgressView+AFNetworking.m */; };
 		D46E82281A4C61A000375A6C /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E82161A4C61A000375A6C /* UIRefreshControl+AFNetworking.m */; };
 		D46E82291A4C61A000375A6C /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E82181A4C61A000375A6C /* UIWebView+AFNetworking.m */; };
+		D46E822E1A4CD15400375A6C /* AddBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E822D1A4CD15400375A6C /* AddBookViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,8 @@
 		D46E82161A4C61A000375A6C /* UIRefreshControl+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIRefreshControl+AFNetworking.m"; sourceTree = "<group>"; };
 		D46E82171A4C61A000375A6C /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		D46E82181A4C61A000375A6C /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
+		D46E822C1A4CD15400375A6C /* AddBookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddBookViewController.h; sourceTree = "<group>"; };
+		D46E822D1A4CD15400375A6C /* AddBookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddBookViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +142,8 @@
 			children = (
 				D4346CB01A46DBC8001FAFE1 /* AppDelegate.h */,
 				D4346CB11A46DBC8001FAFE1 /* AppDelegate.m */,
+				D46E822C1A4CD15400375A6C /* AddBookViewController.h */,
+				D46E822D1A4CD15400375A6C /* AddBookViewController.m */,
 				D4346CB31A46DBC8001FAFE1 /* MainViewController.h */,
 				D4346CB41A46DBC8001FAFE1 /* MainViewController.m */,
 				D4346CD51A46DCEF001FAFE1 /* Book.h */,
@@ -338,6 +343,7 @@
 				D4346CB51A46DBC8001FAFE1 /* MainViewController.m in Sources */,
 				D46E821A1A4C61A000375A6C /* AFHTTPRequestOperationManager.m in Sources */,
 				D46E821E1A4C61A000375A6C /* AFURLConnectionOperation.m in Sources */,
+				D46E822E1A4CD15400375A6C /* AddBookViewController.m in Sources */,
 				D46E82261A4C61A000375A6C /* UIImageView+AFNetworking.m in Sources */,
 				D46E82191A4C61A000375A6C /* AFHTTPRequestOperation.m in Sources */,
 				D46E82231A4C61A000375A6C /* UIActivityIndicatorView+AFNetworking.m in Sources */,

@@ -186,7 +186,7 @@
     // Sort by availability
     if (buttonIndex == 3)
     {
-        NSLog(@"sort by availability")
+        NSLog(@"sort by availability");
     }
 }
 
