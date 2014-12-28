@@ -54,7 +54,6 @@
     [bookAuthorTextField setText:@""];
     [bookPublisherTextField setText:@""];
     [bookCategoriesTextField setText:@""];
-    
 }
 
 

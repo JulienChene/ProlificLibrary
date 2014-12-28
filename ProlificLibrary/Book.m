@@ -37,13 +37,14 @@
     {
         [self setBookAuthor:author];
         [self setBookCategories:categories];
+        [self setBookPublisher:publisher];
         [self setBookLastCheckIn:nil];
         [self setBookLastCheckedOut:lastCheckOut];
         [self setBookLastCheckedOutBy:lastCheckOutBy];
-        [self setBookPublisher:publisher];
         [self setBookTitle:title];
         [self setBookURL:URL];
         [self setBookAvailability:availability];
+        [self setBookID:ID];
     }
     
     return self;

@@ -11,7 +11,8 @@
 
 @interface MainViewController : UITableViewController <UIActionSheetDelegate, AddBookViewControllerDelegate>
 {
-    NSString *sortingType;
+    NSString    *sortingType;
+    NSUInteger   chosenBookIndex;
 }
 
 @property (strong, nonatomic) NSMutableArray    *bookList;

@@ -8,6 +8,7 @@
 
 #import "AFNetworking/AFNetworking.h"
 #import "Book.h"
+#import "BookDetailViewController.h"
 #import "MainViewController.h"
 
 NSString *const kAuthorSort = @"SortByAuthor";
@@ -29,7 +30,9 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     // Do any additional setup after loading the view, typically from a nib.
     
     bookList = [[NSMutableArray alloc] init];
+    
     sortingType = @"None";
+    chosenBookIndex = 0;
     
     [self retrieveBooks];
 }
@@ -78,6 +81,10 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
             // Enables to deal with the null value sent by the server
             NSDate *checkedOutDate = nil;
             NSString *checkedOutBy = @"";
+            NSString *publisher = @"";
+            
+            if (([dict objectForKey:@"publisher"] != nil) && (![[dict objectForKey:@"publisher"] isKindOfClass:[NSNull class]]))
+                publisher = [dict objectForKey:@"publisher"];
             
             if (![[dict objectForKey:@"lastCheckedOut"] isKindOfClass:[NSNull class]])
                 checkedOutDate = [dict objectForKey:@"lastCheckedOut"];
@@ -89,7 +96,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
                                            andCategories:[dict objectForKey:@"categories"]
                                          andLastCheckOut:checkedOutDate
                                        andLastCheckOutBy:checkedOutBy
-                                            andPublisher:[dict objectForKey:@"publisher"]
+                                            andPublisher:publisher
                                                 andTitle:[dict objectForKey:@"title"]
                                                   andURL:[dict objectForKey:@"url"]
                                          andAvailability:[self isInStockWithLastCheckIn:nil andLastCheckOut:checkedOutDate]
@@ -182,6 +189,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    chosenBookIndex = indexPath.row;
     [self performSegueWithIdentifier:@"BookDetailSegue" sender:self];
 }
 
@@ -259,6 +267,11 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 #pragma mark - Segue handling
 
+- (IBAction)addBookButtonPressed:(id)sender
+{
+    [self performSegueWithIdentifier:@"AddBookSegue" sender:self];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"AddBookSegue"])
@@ -275,6 +288,14 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         
         [addBookViewController setDelegate:self];
         [addBookViewController setCurrentID:maxID];
+        NSLog(@"maxID set");
+    }
+    
+    if ([[segue identifier] isEqualToString:@"BookDetailSegue"])
+    {
+        BookDetailViewController *bookDetailViewController = (BookDetailViewController*)[segue destinationViewController];
+        
+        [bookDetailViewController setCurrentBook:[bookList objectAtIndex:chosenBookIndex]];
     }
 }
 
