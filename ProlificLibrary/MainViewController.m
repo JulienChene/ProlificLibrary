@@ -288,7 +288,6 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         
         [addBookViewController setDelegate:self];
         [addBookViewController setCurrentID:maxID];
-        NSLog(@"maxID set");
     }
     
     if ([[segue identifier] isEqualToString:@"BookDetailSegue"])

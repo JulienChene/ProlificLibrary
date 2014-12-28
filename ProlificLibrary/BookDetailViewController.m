@@ -32,6 +32,7 @@
     
     [bookAuthorLabel setText:[currentBook bookAuthor]];
     
+    // Book Publisher Label
     // Handling the case there is no publisher
     NSString *publisher = [currentBook bookPublisher];
     if ([publisher isEqualToString:@""])
@@ -46,6 +47,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"MMMM d, yyyy HH:mm"];
     
+    // Book Check Out Label
     // Handling the case where the book was never checked out before
     NSString *formattedDate = @"";
     if ([currentBook bookLastCheckedOut] == nil)
@@ -62,6 +64,12 @@
     else
         daysToGo = [NSString stringWithFormat:@"%d days", [currentBook bookAvailability]];
     [daysToGoLabel setText:daysToGo];
+    
+    // BookCheckOut Slider
+    float sliderValue = 0;
+    if ([currentBook bookAvailability] < 0)
+        sliderValue = 0;
+    [bookCheckOutSlider setValue:sliderValue];
     
     return [super viewWillAppear:animated];
 }
