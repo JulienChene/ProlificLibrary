@@ -66,16 +66,17 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     for (NSDictionary *dict in newList)
     {
         Boolean isBookExisting = false;
+        
         for (Book *book in bookList)
         {
-            if (([dict objectForKey:@"author"] == [book bookAuthor])
-                || ([dict objectForKey:@"title"] == [book bookTitle]))
+            if ((int)[dict objectForKey:@"id"] == [book bookID])
             {
                 isBookExisting = true;
                 break;
             }
         }
         
+        // If the book doesn't exist, create the book
         if (!isBookExisting)
         {
             // Enables to deal with the null value sent by the server

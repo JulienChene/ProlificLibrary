@@ -9,17 +9,28 @@
 #import <UIKit/UIKit.h>
 #import "Book.h"
 
-@interface BookDetailViewController : UIViewController
+@interface BookDetailViewController : UIViewController <UIActionSheetDelegate>
 
 @property (strong, nonatomic) Book  *currentBook;
 
-@property (strong, nonatomic) IBOutlet UILabel  *bookTitleLabel;
-@property (strong, nonatomic) IBOutlet UILabel  *bookAuthorLabel;
-@property (strong, nonatomic) IBOutlet UILabel  *bookPublisherLabel;
-@property (strong, nonatomic) IBOutlet UILabel  *bookCategoriesLabel;
-@property (strong, nonatomic) IBOutlet UILabel  *bookCheckOutLabel;
-@property (strong, nonatomic) IBOutlet UILabel  *daysToGoLabel;
+@property (weak, nonatomic) IBOutlet UILabel  *bookTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel  *bookAuthorLabel;
+@property (weak, nonatomic) IBOutlet UILabel  *bookPublisherLabel;
+@property (weak, nonatomic) IBOutlet UILabel  *bookCategoriesLabel;
+@property (weak, nonatomic) IBOutlet UILabel  *bookCheckOutLabel;
+@property (weak, nonatomic) IBOutlet UILabel  *daysToGoLabel;
 
-@property (strong, nonatomic) IBOutlet UISlider *bookCheckOutSlider;
+@property (weak, nonatomic) IBOutlet UISlider *bookCheckOutSlider;
+
+@property (weak, nonatomic) IBOutlet UIView   *coverView;
+@property (weak, nonatomic) IBOutlet UIView   *checkoutView;
+@property (weak, nonatomic) IBOutlet UIView   *nameView;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *nameTextFieldWidthConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *nameTextFieldLeadingSpaceConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *pickerWidthConstraint;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *nameViewWidthConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *nameViewLeadingSpaceConstraint;
 
 @end

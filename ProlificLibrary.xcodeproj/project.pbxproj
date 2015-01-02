@@ -15,6 +15,7 @@
 		D4346CC91A46DBC8001FAFE1 /* ProlificLibraryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4346CC81A46DBC8001FAFE1 /* ProlificLibraryTests.m */; };
 		D4346CD71A46DCEF001FAFE1 /* Book.m in Sources */ = {isa = PBXBuildFile; fileRef = D4346CD61A46DCEF001FAFE1 /* Book.m */; };
 		D4346CD91A46DE85001FAFE1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4346CD81A46DE85001FAFE1 /* Default-568h@2x.png */; };
+		D43FE7C51A56EDD800025A46 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D43FE7C41A56EDD800025A46 /* Social.framework */; };
 		D46E82191A4C61A000375A6C /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E81F51A4C61A000375A6C /* AFHTTPRequestOperation.m */; };
 		D46E821A1A4C61A000375A6C /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E81F71A4C61A000375A6C /* AFHTTPRequestOperationManager.m */; };
 		D46E821B1A4C61A000375A6C /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D46E81F91A4C61A000375A6C /* AFHTTPSessionManager.m */; };
@@ -62,6 +63,7 @@
 		D4346CD51A46DCEF001FAFE1 /* Book.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Book.h; sourceTree = "<group>"; };
 		D4346CD61A46DCEF001FAFE1 /* Book.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Book.m; sourceTree = "<group>"; };
 		D4346CD81A46DE85001FAFE1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		D43FE7C41A56EDD800025A46 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		D46E81F41A4C61A000375A6C /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
 		D46E81F51A4C61A000375A6C /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
 		D46E81F61A4C61A000375A6C /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D43FE7C51A56EDD800025A46 /* Social.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,6 +162,7 @@
 				D46E81F31A4C61A000375A6C /* AFNetworking */,
 				D46E82071A4C61A000375A6C /* UIKit+AFNetworking */,
 				D4346CAC1A46DBC8001FAFE1 /* Supporting Files */,
+				D43FE7C61A56EDED00025A46 /* Framework */,
 			);
 			path = ProlificLibrary;
 			sourceTree = "<group>";
@@ -187,6 +191,14 @@
 				D4346CC71A46DBC8001FAFE1 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D43FE7C61A56EDED00025A46 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				D43FE7C41A56EDD800025A46 /* Social.framework */,
+			);
+			name = Framework;
 			sourceTree = "<group>";
 		};
 		D46E81F31A4C61A000375A6C /* AFNetworking */ = {
