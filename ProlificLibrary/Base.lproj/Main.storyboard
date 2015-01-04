@@ -14,6 +14,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="IZ9-mD-5Rq">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="BookCell" rowHeight="47" id="clf-86-K4x">
                                 <rect key="frame" x="0.0" y="277" width="600" height="47"/>
@@ -73,11 +78,21 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="searchDisplayController" destination="aJG-a0-ID5" id="k8x-2w-yMR"/>
                         <segue destination="3nN-bG-J7n" kind="show" identifier="BookDetailSegue" id="PvJ-BB-Gbz"/>
                         <segue destination="jCY-Vq-NJL" kind="presentation" identifier="AddBookSegue" id="Riv-qz-ygO"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fgX-pS-i54" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="aJG-a0-ID5">
+                    <connections>
+                        <outlet property="delegate" destination="EDs-F5-XcV" id="NeL-bR-7OR"/>
+                        <outlet property="searchBar" destination="IZ9-mD-5Rq" id="qYk-1Q-pFt"/>
+                        <outlet property="searchContentsController" destination="EDs-F5-XcV" id="tfN-iu-zAv"/>
+                        <outlet property="searchResultsDataSource" destination="EDs-F5-XcV" id="qwZ-bm-ZXM"/>
+                        <outlet property="searchResultsDelegate" destination="EDs-F5-XcV" id="VQM-W6-hjL"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1886" y="136"/>
         </scene>

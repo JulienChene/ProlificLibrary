@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "AddBookViewController.h"
 
-@interface MainViewController : UITableViewController <UIActionSheetDelegate, AddBookViewControllerDelegate, bookDetailViewControllerDelegate>
+@interface MainViewController : UITableViewController <UIActionSheetDelegate,  UISearchDisplayDelegate, AddBookViewControllerDelegate, bookDetailViewControllerDelegate>
 {
     NSString    *sortingType;
-    NSUInteger   chosenBookIndex;
+    NSUInteger  chosenBookIndex;
+    NSMutableArray     *searchResults;
 }
 
 @property (strong, nonatomic) NSMutableArray    *bookList;

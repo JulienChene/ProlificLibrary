@@ -96,7 +96,7 @@
     
     [nameView addGestureRecognizer:swipeLeft];
     [nameView addGestureRecognizer:swipeRight];
-    
+
     // Hiding cover view
     coverViewTopSpaceConstraint.constant = [[UIScreen mainScreen] bounds].size.height;
     coverViewBottomSpaceConstraint.constant = - [[UIScreen mainScreen] bounds].size.height;

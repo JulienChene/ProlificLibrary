@@ -30,6 +30,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     // Do any additional setup after loading the view, typically from a nib.
     
     bookList = [[NSMutableArray alloc] init];
+    searchResults = [[NSMutableArray alloc] init];
     
     sortingType = @"None";
     chosenBookIndex = 0;
@@ -134,7 +135,22 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
             }];
     else
         if ([type isEqualToString:kAvailabilitySort])
-            NSLog(@"Availability sort");
+        {
+            [bookList sortUsingComparator:^NSComparisonResult (id obj1, id obj2){
+                Book *firstBook = (Book*) obj1;
+                Book *secondBook = (Book*) obj2;
+                
+                int firstBookAvailability = [firstBook bookAvailability];
+                int secondBookAvailability = [secondBook bookAvailability];;
+                
+                if (firstBookAvailability > secondBookAvailability)
+                    return (NSComparisonResult)NSOrderedSame;
+                else if (firstBookAvailability < secondBookAvailability)
+                    return (NSComparisonResult)NSOrderedDescending;
+                else
+                    return (NSComparisonResult)NSOrderedSame;
+            }];
+        }
 }
 
 
@@ -151,6 +167,8 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (tableView == self.searchDisplayController.searchResultsTableView)
+        return [searchResults count];
     return [self.bookList count];
 }
 
@@ -161,9 +179,14 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BookCell"];
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"BookCell"];
     
-    Book *book = [bookList objectAtIndex:indexPath.row];
+    Book *book = nil;
+    
+    if (tableView == self.searchDisplayController.searchResultsTableView)
+        book = [searchResults objectAtIndex:indexPath.row];
+    else
+        book = [bookList objectAtIndex:indexPath.row];
     
     UILabel *bookTitleLabel = (UILabel *)[cell viewWithTag:100];
     [bookTitleLabel setText:[book bookTitle]];
@@ -204,7 +227,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     chosenBookIndex = indexPath.row;
-    [self performSegueWithIdentifier:@"BookDetailSegue" sender:self];
+    [self performSegueWithIdentifier:@"BookDetailSegue" sender:tableView];
 }
 
 
@@ -323,9 +346,35 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     {
         BookDetailViewController *bookDetailViewController = (BookDetailViewController*)[segue destinationViewController];
         
-        [bookDetailViewController setCurrentBook:[bookList objectAtIndex:chosenBookIndex]];
+        if (sender == self.searchDisplayController.searchResultsTableView)
+            [bookDetailViewController setCurrentBook:[searchResults objectAtIndex:chosenBookIndex]];
+        else
+            [bookDetailViewController setCurrentBook:[bookList objectAtIndex:chosenBookIndex]];
         [bookDetailViewController setDelegate:self];
     }
+}
+
+
+
+
+
+
+#pragma mark - UISearchDisplay Delegate
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self filterContentForSearchText:searchString
+                               scope:[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    
+    return YES;
+}
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    [searchResults removeAllObjects];
+    
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"bookAuthor contains[cd] %@ OR bookTitle contains[cd] %@", searchText, searchText];
+    searchResults = [NSMutableArray arrayWithArray:[bookList filteredArrayUsingPredicate:resultPredicate]];
 }
 
 
