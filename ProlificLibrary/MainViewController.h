@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AddBookViewController.h"
 
-@interface MainViewController : UITableViewController <UIActionSheetDelegate, AddBookViewControllerDelegate>
+@interface MainViewController : UITableViewController <UIActionSheetDelegate, AddBookViewControllerDelegate, bookDetailViewControllerDelegate>
 {
     NSString    *sortingType;
     NSUInteger   chosenBookIndex;

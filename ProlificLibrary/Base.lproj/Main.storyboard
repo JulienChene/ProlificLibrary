@@ -250,7 +250,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BookCheckOutLabel" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="pKD-AU-yiQ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BookCheckOutLabel" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="pKD-AU-yiQ">
                                 <rect key="frame" x="16" y="192" width="568" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -266,7 +266,11 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                                 <items>
                                                     <navigationItem title="Checkout" id="E3o-rj-a2D">
-                                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="4BR-uB-cNd"/>
+                                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="4BR-uB-cNd">
+                                                            <connections>
+                                                                <action selector="doneButtonPressed:" destination="3nN-bG-J7n" id="b1I-YC-K3E"/>
+                                                            </connections>
+                                                        </barButtonItem>
                                                     </navigationItem>
                                                 </items>
                                             </navigationBar>
@@ -371,9 +375,13 @@
                         <outlet property="bookCheckOutSlider" destination="fc3-gD-lXw" id="zfT-Go-bPf"/>
                         <outlet property="bookPublisherLabel" destination="sx5-hf-rUU" id="roW-Qf-9Kw"/>
                         <outlet property="bookTitleLabel" destination="QXd-SL-bLA" id="eno-rE-RS6"/>
-                        <outlet property="checkoutView" destination="JWT-TI-ZvC" id="VOi-sv-Ghr"/>
+                        <outlet property="checkoutView" destination="JWT-TI-ZvC" id="VSB-iF-LuC"/>
+                        <outlet property="checkoutViewTopSpaceConstraint" destination="Q7Y-Fc-Lkk" id="Pid-Sp-6XL"/>
                         <outlet property="coverView" destination="fPd-Sh-WcH" id="oQ2-hP-6ty"/>
+                        <outlet property="coverViewBottomSpaceConstraint" destination="ZGU-Yb-nIZ" id="eef-Pf-KDq"/>
+                        <outlet property="coverViewTopSpaceConstraint" destination="rkS-g4-NrH" id="gzU-CU-2Ng"/>
                         <outlet property="daysToGoLabel" destination="CIt-ck-uTI" id="kmt-Dj-iWL"/>
+                        <outlet property="nameTextField" destination="mcR-k0-QM5" id="ghT-Z0-noL"/>
                         <outlet property="nameTextFieldLeadingSpaceConstraint" destination="ONc-26-ba1" id="vfR-p3-Mms"/>
                         <outlet property="nameTextFieldWidthConstraint" destination="Jwe-rw-XQS" id="YPg-lM-xUs"/>
                         <outlet property="nameView" destination="jNR-DU-xXU" id="7nb-kD-Qji"/>

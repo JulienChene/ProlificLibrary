@@ -37,6 +37,13 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [self retrieveBooks];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self.tableView reloadData];
+    
+    return [super viewWillAppear:animated];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -174,7 +181,13 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     }
     else
     {
-        [bookAvailabilityLabel setTextColor:[UIColor redColor]];
+        if ([book bookAvailability] < 20)
+            [bookAvailabilityLabel setTextColor:[UIColor blueColor]];
+        else if ([book bookAvailability] < 30)
+            [bookAvailabilityLabel setTextColor:[UIColor orangeColor]];
+        else if ([book bookAvailability] >= 30)
+            [bookAvailabilityLabel setTextColor:[UIColor redColor]];
+        
         [bookAvailabilityLabel setText:[NSString stringWithFormat:@"%d days", [book bookAvailability]]];
     }
     
@@ -250,7 +263,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 
 
-#pragma mark - AddBookViewController Delegate
+#pragma mark - AddBookViewController Delegate and BookDetailViewController Delegate
 
 - (void)addBookWithBook:(Book *)book
 {
@@ -258,6 +271,21 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     
     [self sortListBy:sortingType];
     [self.tableView reloadData];
+}
+
+- (void)bookCheckoutWithBook:(Book *)book
+{
+    int i = 0;
+    
+    while (i < [bookList count])
+    {
+        if ([book bookID] == [[bookList objectAtIndex:i] bookID])
+        {
+            [bookList replaceObjectAtIndex:i withObject:book];
+            break;
+        }
+        i++;
+    }
 }
 
 
@@ -296,6 +324,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         BookDetailViewController *bookDetailViewController = (BookDetailViewController*)[segue destinationViewController];
         
         [bookDetailViewController setCurrentBook:[bookList objectAtIndex:chosenBookIndex]];
+        [bookDetailViewController setDelegate:self];
     }
 }
 
