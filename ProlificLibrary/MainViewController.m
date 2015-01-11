@@ -22,6 +22,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 @implementation MainViewController
 
 @synthesize bookList;
+@synthesize checkoutNameList;
 
 // TODO : Clean files, Availability sort, check if book already exists when adding.
 
@@ -31,6 +32,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     
     bookList = [[NSMutableArray alloc] init];
     searchResults = [[NSMutableArray alloc] init];
+    checkoutNameList = [[NSMutableArray alloc] init];
     
     sortingType = @"None";
     chosenBookIndex = 0;
@@ -96,7 +98,15 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
                 publisher = [dict objectForKey:@"publisher"];
             
             if (![[dict objectForKey:@"lastCheckedOut"] isKindOfClass:[NSNull class]])
-                checkedOutDate = [dict objectForKey:@"lastCheckedOut"];
+            {
+                NSString *dateString = [dict objectForKey:@"lastCheckedOut"];
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+
+                [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                
+                
+                checkedOutDate = [dateFormatter dateFromString:dateString];
+            }
             
             if (![[dict objectForKey:@"lastCheckedOutBy"] isKindOfClass:[NSNull class]])
                 checkedOutBy = [dict objectForKey:@"lastCheckedOutBy"];
@@ -177,6 +187,11 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     return 47;
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"BookCell"];
@@ -230,6 +245,15 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [self performSegueWithIdentifier:@"BookDetailSegue" sender:tableView];
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self deleteBookWithURL:[[self.bookList objectAtIndex:indexPath.row] bookURL]];
+        [self.bookList removeObjectAtIndex:indexPath.row];
+        
+        [tableView reloadData]; // tell table to refresh now
+    }
+}
+
 
 
 
@@ -252,7 +276,12 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0)
-        NSLog(@"Remove all items");
+    {
+        [bookList removeAllObjects];
+        [self.tableView reloadData];
+        
+        [self deleteAllBooks];
+    }
     
     // Sort by author
     if (buttonIndex == 1)
@@ -292,8 +321,43 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 {
     [bookList addObject:book];
     
+    NSDictionary *params = [self setParamsBeforeSendWithBook:book];
+    
+    [self sendBookWithParams:params];
+    
     [self sortListBy:sortingType];
     [self.tableView reloadData];
+}
+
+- (NSDictionary*)setParamsBeforeSendWithBook:(Book*)book
+{
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:[book bookAuthor], [book bookTitle], [book bookCategories], nil]
+                                                                       forKeys:[NSArray arrayWithObjects:@"author", @"title", @"categories", nil]];
+    
+    // Adding LastCheckedOut
+    if ([book bookLastCheckedOut] != nil)
+    {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        
+        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
+        [params setObject:[formatter stringFromDate:[book bookLastCheckedOut]] forKey:@"lastCheckedOut"];
+    }
+    else
+        [params setObject:[NSNull null] forKey:@"lastCheckedOut"];
+    
+    // Adding LastCheckedOutBy
+    if ([book bookLastCheckedOutBy] != nil)
+        [params setObject:[book bookLastCheckedOutBy] forKey:@"lastCheckedOutBy"];
+    else
+        [params setObject:[NSNull null] forKey:@"lastCheckedOutBy"];
+    
+    // Adding publisher
+    if ([book bookPublisher] != nil)
+        [params setObject:[book bookPublisher] forKey:@"publisher"];
+    else
+        [params setObject:[NSNull null] forKey:@"publisher"];
+    
+    return params;
 }
 
 - (void)bookCheckoutWithBook:(Book *)book
@@ -304,11 +368,34 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     {
         if ([book bookID] == [[bookList objectAtIndex:i] bookID])
         {
+            NSDictionary *params = [self setParamsForUpdateWithUpdatedBook:book andOldBook:[bookList objectAtIndex:i]];
+            
+            [self updateBookWithParams:params andURL:[book bookURL]];
+            
             [bookList replaceObjectAtIndex:i withObject:book];
             break;
         }
         i++;
     }
+}
+
+- (NSDictionary*)setParamsForUpdateWithUpdatedBook:(Book*)updatedBook andOldBook:(Book*)oldBook
+{
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    
+    if ([[updatedBook bookLastCheckedOutBy] isEqualToString:[oldBook bookLastCheckedOutBy]])
+        [params setObject:[updatedBook bookLastCheckedOutBy] forKey:@"lastCheckedOutBy"];
+    
+    // Compare dates
+    if (![[updatedBook bookLastCheckedOut] compare:[oldBook bookLastCheckedOut]] == NSOrderedSame)
+    {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
+        
+        [params setObject:[formatter stringFromDate:[updatedBook bookLastCheckedOut]] forKey:@"lastCheckedOut"];
+    }
+    
+    return params;
 }
 
 
@@ -395,7 +482,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
+        NSLog(@"%@", responseObject);
         NSArray *responseList = (NSArray *)responseObject;
         [self updateBookListWithArray:responseList];
         [self.tableView reloadData];
@@ -413,32 +500,76 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [operation start];
 }
 
+- (void)sendBookWithParams:(NSDictionary*)params
+{
+    NSString *urlString = @"http://prolific-interview.herokuapp.com/5488c4836aed89000761c2f4/books/";
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    
+    [manager POST:urlString parameters:params
+          success:^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        NSLog(@"Response: %ld", (long)[operation.response statusCode]);
+        NSLog(@"JSON: %@", responseObject);
+    }
+          failure:
+     ^(AFHTTPRequestOperation *operation, NSError *error) {
+         NSLog(@"Error: %@", error);
+     }];
+}
+
+- (void)updateBookWithParams:(NSDictionary*)params andURL:(NSString*)url
+{
+    NSString *urlString = [NSString stringWithFormat:@"http://prolific-interview.herokuapp.com/5488c4836aed89000761c2f4%@", url];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    
+    [manager PUT:urlString parameters:params
+          success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         NSLog(@"Response: %ld", (long)[operation.response statusCode]);
+         NSLog(@"JSON: %@", responseObject);
+     }
+          failure:
+     ^(AFHTTPRequestOperation *operation, NSError *error) {
+         NSLog(@"Error: %@", error);
+     }];
+}
+
+- (void)deleteBookWithURL:(NSString*)url
+{
+    NSString *urlString = [NSString stringWithFormat:@"http://prolific-interview.herokuapp.com/5488c4836aed89000761c2f4%@", url];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    
+    [manager DELETE:urlString parameters:nil
+            success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         NSLog(@"JSON: %@", responseObject);
+     }
+            failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"Error: %@", error);
+            }];
+}
+
 - (void)deleteAllBooks
 {
-    NSString *string = @"http://prolific-interview.herokuapp.com/5488c4836aed89000761c2f4/clean";
-    NSURL *url = [NSURL URLWithString:string];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSString *urlString = @"http://prolific-interview.herokuapp.com/5488c4836aed89000761c2f4/clean";
+
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
     
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        NSArray *responseList = (NSArray *)responseObject;
-        [self updateBookListWithArray:responseList];
-        [self.tableView reloadData];
-    }
-                                     failure:^(AFHTTPRequestOperation *operation, NSError *error)
+    [manager DELETE:urlString parameters:nil
+            success:^(AFHTTPRequestOperation *operation, id responseObject)
      {
-         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Books"
-                                                             message:[error localizedDescription]
-                                                            delegate:nil
-                                                   cancelButtonTitle:@"Ok"
-                                                   otherButtonTitles:nil];
-         [alertView show];
-     }];
-    
-    [operation start];
+         NSLog(@"JSON: %@", responseObject);
+     }
+            failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+         NSLog(@"Error: %@", error);
+    }];
 }
 
 @end

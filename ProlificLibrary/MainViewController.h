@@ -11,12 +11,13 @@
 
 @interface MainViewController : UITableViewController <UIActionSheetDelegate,  UISearchDisplayDelegate, AddBookViewControllerDelegate, bookDetailViewControllerDelegate>
 {
-    NSString    *sortingType;
-    NSUInteger  chosenBookIndex;
-    NSMutableArray     *searchResults;
+    NSString        *sortingType;
+    NSUInteger      chosenBookIndex;
+    NSMutableArray  *searchResults;
 }
 
 @property (strong, nonatomic) NSMutableArray    *bookList;
+@property (strong, nonatomic) NSMutableArray    *checkoutNameList;
 
 @end
 

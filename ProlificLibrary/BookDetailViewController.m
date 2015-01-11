@@ -25,6 +25,7 @@
 @synthesize daysToGoLabel;
 
 @synthesize bookCheckOutSlider;
+@synthesize checkoutButton;
 
 @synthesize coverView;
 @synthesize checkoutView;
@@ -73,7 +74,7 @@
     
     // Book Check Out Label
     // Handling the case where the book was never checked out before
-    [self bookCheckoutHandler];
+    [self bookCheckOutHandler];
     
     // Setting blue border checkout box
     [checkoutView.layer setBorderWidth:0.5];
@@ -104,7 +105,7 @@
     return [super viewWillAppear:animated];
 }
 
-- (void)bookCheckoutHandler
+- (void)bookCheckOutHandler
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     NSString *formattedDate = @"";
@@ -118,6 +119,36 @@
     
     [bookCheckOutLabel setText:[NSString stringWithFormat:@"Last Checked Out:\n%@", formattedDate]];
     
+    // DaysToGo Label
+    NSString *daysToGo = @"";
+    if ([currentBook bookAvailability] < 0)
+        daysToGo = @"In Stock";
+    else
+        daysToGo = [NSString stringWithFormat:@"%d days", [currentBook bookAvailability]];
+    [daysToGoLabel setText:daysToGo];
+    
+    // BookCheckOut Slider
+    float sliderValue = 0;
+    if ([currentBook bookAvailability] < 0)
+    {
+        sliderValue = 0;
+        [checkoutButton setTitle:@"Checkout" forState:UIControlStateNormal];
+    }
+    else
+    {
+        if ([currentBook bookAvailability] > 25)
+            [bookCheckOutSlider setMinimumTrackTintColor:[UIColor orangeColor]];
+        if ([currentBook bookAvailability] > 30)
+            [bookCheckOutSlider setMinimumTrackTintColor:[UIColor redColor]];
+        
+        [checkoutButton setTitle:@"Check In" forState:UIControlStateNormal];
+    }
+    
+    [bookCheckOutSlider setValue:sliderValue];
+}
+
+- (void)bookCheckInHandler
+{
     // DaysToGo Label
     NSString *daysToGo = @"";
     if ([currentBook bookAvailability] < 0)
@@ -183,26 +214,35 @@
 
 - (IBAction)checkoutButtonPressed:(id)sender
 {
-    [UIView animateWithDuration:0.5 animations:^{
-        coverViewTopSpaceConstraint.constant = 0;
-        coverViewBottomSpaceConstraint.constant = 0;
+    if ([[[checkoutButton titleLabel] text] isEqualToString:@"Checkout"])
+        [UIView animateWithDuration:0.5 animations:^{
+            coverViewTopSpaceConstraint.constant = 0;
+            coverViewBottomSpaceConstraint.constant = 0;
         
-        [self.view layoutIfNeeded];
-    }];
+            [self.view layoutIfNeeded];
+        }];
+    else
+    {
+        [currentBook setBookAvailability:-1];
+        [self bookCheckInHandler];
+        
+        [checkoutButton setTitle:@"Checkout" forState:UIControlStateNormal];
+    }
 }
 
 - (IBAction)doneButtonPressed:(id)sender
 {
     [nameTextField resignFirstResponder];
-    
-    [UIView animateWithDuration:0.5 animations:^{
-        checkoutViewTopSpaceConstraint.constant = checkoutViewTopSpaceContraintConstant;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.5 animations:^{
+            checkoutViewTopSpaceConstraint.constant = checkoutViewTopSpaceContraintConstant;
             
-        coverViewTopSpaceConstraint.constant = [[UIScreen mainScreen] bounds].size.height;
-        coverViewBottomSpaceConstraint.constant = - [[UIScreen mainScreen] bounds].size.height;
+            coverViewTopSpaceConstraint.constant = [[UIScreen mainScreen] bounds].size.height;
+            coverViewBottomSpaceConstraint.constant = - [[UIScreen mainScreen] bounds].size.height;
             
-        [self.view layoutIfNeeded];
-    }];
+            [self.view layoutIfNeeded];
+        }];
+    });
     
     // If the textfield is out
     if ((nameViewLeadingSpaceConstraint.constant == 0) && (![[nameTextField text] isEqualToString:@""]))
@@ -211,10 +251,11 @@
         [currentBook setBookLastCheckedOutBy:[nameTextField text]];
         [currentBook setBookAvailability:0];
         
-        [self bookCheckoutHandler];
+        [self bookCheckOutHandler];
         [delegate bookCheckoutWithBook:currentBook];
     }
-        
+    
+    [checkoutButton setTitle:@"Check In" forState:UIControlStateNormal];
 }
 
 - (IBAction)shareButtonPressed:(id)sender

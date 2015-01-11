@@ -43,7 +43,7 @@
                                andLastCheckOutBy:@""
                                     andPublisher:[bookPublisherTextField text]
                                         andTitle:[bookTitleTextField text]
-                                          andURL:@""
+                                          andURL:[NSString stringWithFormat:@"/books/%d", currentID]
                                  andAvailability:(-1)
                                            andID:currentID];
     

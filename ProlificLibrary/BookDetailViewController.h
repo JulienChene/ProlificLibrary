@@ -31,6 +31,7 @@
 @property (weak, nonatomic) IBOutlet UILabel  *daysToGoLabel;
 
 @property (weak, nonatomic) IBOutlet UISlider *bookCheckOutSlider;
+@property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
 
 @property (weak, nonatomic) IBOutlet UIView   *coverView;
 @property (weak, nonatomic) IBOutlet UIView   *checkoutView;

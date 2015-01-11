@@ -390,6 +390,7 @@
                         <outlet property="bookCheckOutSlider" destination="fc3-gD-lXw" id="zfT-Go-bPf"/>
                         <outlet property="bookPublisherLabel" destination="sx5-hf-rUU" id="roW-Qf-9Kw"/>
                         <outlet property="bookTitleLabel" destination="QXd-SL-bLA" id="eno-rE-RS6"/>
+                        <outlet property="checkoutButton" destination="i3B-4u-X6r" id="tPc-b5-T7S"/>
                         <outlet property="checkoutView" destination="JWT-TI-ZvC" id="VSB-iF-LuC"/>
                         <outlet property="checkoutViewTopSpaceConstraint" destination="Q7Y-Fc-Lkk" id="Pid-Sp-6XL"/>
                         <outlet property="coverView" destination="fPd-Sh-WcH" id="oQ2-hP-6ty"/>
