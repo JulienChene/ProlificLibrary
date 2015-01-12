@@ -185,20 +185,21 @@
     {
         if ([name isEqualToString:[nameList objectAtIndex:namePosition]])
         {
-            doesNameExist = true;
+             doesNameExist = true;
             break;
         }
         namePosition++;
     }
     
-    if (!doesNameExist)
+     if (!doesNameExist)
         [nameList addObject:name];
     else
     {
-        [nameList removeObjectAtIndex:namePosition];
-        [nameList insertObject:name atIndex:0];
+         [nameList insertObject:name atIndex:0];
+        [nameList removeObjectAtIndex:namePosition + 1];
+        NSLog(@"Done");
     }
-}
+ }
 
 
 
@@ -303,16 +304,19 @@
         [namePickerView reloadAllComponents];
     }
     
-    if ((nameViewLeadingSpaceConstraint.constant != 0) && (![[nameTextField text] isEqualToString:@""]))
+    if (nameViewLeadingSpaceConstraint.constant != 0)
     {
+        NSString *name = [nameList objectAtIndex:[namePickerView selectedRowInComponent:0]];
+        NSLog(@"Name: %@", name);
+        
         [currentBook setBookLastCheckedOut:[NSDate date]];
-        [currentBook setBookLastCheckedOutBy:pickerViewSelectedName];
+        [currentBook setBookLastCheckedOutBy:name];
         [currentBook setBookAvailability:0];
         
-        [self checkIfBookExistsWithName:pickerViewSelectedName];
+        [self checkIfBookExistsWithName:name];
         
         [self bookCheckOutHandler];
-        [delegate bookCheckoutWithBook:currentBook andName:pickerViewSelectedName];
+        [delegate bookCheckoutWithBook:currentBook andName:name];
         
         // Now the book can be checked out
         [checkoutButton setTitle:@"Check In" forState:UIControlStateNormal];
@@ -359,6 +363,7 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
+    NSLog(@"picker delegate");
     pickerViewSelectedName = [nameList objectAtIndex:row];
 }
 

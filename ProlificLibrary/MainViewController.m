@@ -85,7 +85,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         
         for (Book *book in bookList)
         {
-            if ((int)[dict objectForKey:@"id"] == [book bookID])
+            if ([[dict objectForKey:@"id"] intValue] == [book bookID])
             {
                 isBookExisting = true;
                 break;
@@ -99,6 +99,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
             NSDate *checkedOutDate = nil;
             NSString *checkedOutBy = @"";
             NSString *publisher = @"";
+            NSString *ID = [dict objectForKey:@"id"];
             
             if (([dict objectForKey:@"publisher"] != nil) && (![[dict objectForKey:@"publisher"] isKindOfClass:[NSNull class]]))
                 publisher = [dict objectForKey:@"publisher"];
@@ -126,7 +127,8 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
                                                 andTitle:[dict objectForKey:@"title"]
                                                   andURL:[dict objectForKey:@"url"]
                                          andAvailability:[self isInStockWithLastCheckIn:nil andLastCheckOut:checkedOutDate]
-                                                   andID:(int)[dict objectForKey:@"id"]];
+                                                   andID:[ID intValue]];
+            NSLog(@"Adding book with ID: %d", [newBook bookID]);
             
             [bookList addObject:newBook];
         }
@@ -209,7 +211,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         book = [searchResults objectAtIndex:indexPath.row];
     else
         book = [bookList objectAtIndex:indexPath.row];
-    
+    NSLog(@"Book ID:  %d", [book bookID]);
     UILabel *bookTitleLabel = (UILabel *)[cell viewWithTag:100];
     [bookTitleLabel setText:[book bookTitle]];
     
@@ -403,12 +405,16 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         [checkoutNameList addObject:name];
     else
     {
-        [checkoutNameList removeObjectAtIndex:namePosition];
+        NSLog(@"Insert object at index %d", namePosition);
         [checkoutNameList insertObject:name atIndex:0];
+        [checkoutNameList removeObjectAtIndex:namePosition + 1];
+        NSLog(@"Done");
     }
     
     if ([checkoutNameList count] > 10)
         [checkoutNameList removeObjectAtIndex:10];
+    
+    [self saveData];
 }
 
 - (NSDictionary*)setParamsForUpdateWithUpdatedBook:(Book*)updatedBook andOldBook:(Book*)oldBook
@@ -516,7 +522,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSLog(@"%@", responseObject);
+        NSLog(@"%@", responseObject);
         NSArray *responseList = (NSArray *)responseObject;
         [self updateBookListWithArray:responseList];
         [self.tableView reloadData];
@@ -619,6 +625,9 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [defaults setObject:encodedNameList forKey:kNameList];
     
     [defaults synchronize];
+    
+    for (Book* book in bookList)
+        NSLog(@"\tSave Book ID: %d", [book bookID]);
 }
 
 - (void)loadData
@@ -634,6 +643,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         for (Book *book in tempoArray)
         {
             [bookList addObject:book];
+            NSLog(@"\tLoad BookID: %d", [book bookID]);
         }
     }
 
@@ -648,8 +658,6 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
             [checkoutNameList addObject:name];
         }
     }
-    
-    [self.tableView reloadData];
 }
 
 @end

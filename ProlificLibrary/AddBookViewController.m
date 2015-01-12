@@ -36,7 +36,7 @@
 
 - (IBAction)addBookButtonPressed:(id)sender
 {
-    currentID += 1;
+    currentID++;
     Book *newBook = [[Book alloc] initWithAuthor:[bookAuthorTextField text]
                                    andCategories:[bookCategoriesTextField text]
                                   andLastCheckIn:nil
