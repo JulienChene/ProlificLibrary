@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface Book : UIViewController
+@interface Book : UIViewController <NSCoding>
 
 @property (strong, nonatomic) NSString  *bookAuthor;
 @property (strong, nonatomic) NSString  *bookCategories;
@@ -23,6 +23,7 @@
 
 - (id)initWithAuthor:(NSString*) author
        andCategories:(NSString*) categories
+      andLastCheckIn:(NSDate*) lastCheckIn
      andLastCheckOut:(NSDate*) lastCheckOut
    andLastCheckOutBy:(NSString*) lastCheckOutBy
         andPublisher:(NSString*) publisher

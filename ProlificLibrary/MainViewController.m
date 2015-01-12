@@ -6,10 +6,13 @@
 //  Copyright (c) 2014 JulienChene. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "AFNetworking/AFNetworking.h"
 #import "Book.h"
-#import "BookDetailViewController.h"
 #import "MainViewController.h"
+
+#define kBookList   @"BookList"
+#define kNameList   @"NameList"
 
 NSString *const kAuthorSort = @"SortByAuthor";
 NSString *const kTitleSort = @"SortByTitle";
@@ -36,6 +39,9 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     
     sortingType = @"None";
     chosenBookIndex = 0;
+    
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    appDelegate.mainVC = self;
     
     [self retrieveBooks];
 }
@@ -113,6 +119,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
             
             Book *newBook = [[Book alloc] initWithAuthor:[dict objectForKey:@"author"]
                                            andCategories:[dict objectForKey:@"categories"]
+                                          andLastCheckIn:nil
                                          andLastCheckOut:checkedOutDate
                                        andLastCheckOutBy:checkedOutBy
                                             andPublisher:publisher
@@ -360,7 +367,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     return params;
 }
 
-- (void)bookCheckoutWithBook:(Book *)book
+- (void)bookCheckoutWithBook:(Book *)book andName:(NSString *)name
 {
     int i = 0;
     
@@ -377,6 +384,31 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         }
         i++;
     }
+    
+    // Check if the name is not already present
+    int namePosition = 0;
+    Boolean doesNameExist = false;
+
+    while (namePosition < [checkoutNameList count])
+    {
+        if ([name isEqualToString:[checkoutNameList objectAtIndex:namePosition]])
+        {
+            doesNameExist = true;
+            break;
+        }
+        namePosition++;
+    }
+    
+    if (!doesNameExist)
+        [checkoutNameList addObject:name];
+    else
+    {
+        [checkoutNameList removeObjectAtIndex:namePosition];
+        [checkoutNameList insertObject:name atIndex:0];
+    }
+    
+    if ([checkoutNameList count] > 10)
+        [checkoutNameList removeObjectAtIndex:10];
 }
 
 - (NSDictionary*)setParamsForUpdateWithUpdatedBook:(Book*)updatedBook andOldBook:(Book*)oldBook
@@ -417,14 +449,14 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     {
         AddBookViewController *addBookViewController = (AddBookViewController*)[segue destinationViewController];
         
-        int maxID = 1;
+        int maxID = 0;
         
         for (Book *book in bookList)
         {
             if ([book bookID] > maxID)
                 maxID = [book bookID];
         }
-        
+        NSLog(@"max ID: %d", maxID);
         [addBookViewController setDelegate:self];
         [addBookViewController setCurrentID:maxID];
     }
@@ -437,6 +469,8 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
             [bookDetailViewController setCurrentBook:[searchResults objectAtIndex:chosenBookIndex]];
         else
             [bookDetailViewController setCurrentBook:[bookList objectAtIndex:chosenBookIndex]];
+        
+        [bookDetailViewController setNameList:[NSMutableArray arrayWithArray:checkoutNameList]];
         [bookDetailViewController setDelegate:self];
     }
 }
@@ -482,7 +516,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"%@", responseObject);
+//        NSLog(@"%@", responseObject);
         NSArray *responseList = (NSArray *)responseObject;
         [self updateBookListWithArray:responseList];
         [self.tableView reloadData];
@@ -510,8 +544,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [manager POST:urlString parameters:params
           success:^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSLog(@"Response: %ld", (long)[operation.response statusCode]);
-        NSLog(@"JSON: %@", responseObject);
+//        NSLog(@"JSON: %@", responseObject);
     }
           failure:
      ^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -529,8 +562,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [manager PUT:urlString parameters:params
           success:^(AFHTTPRequestOperation *operation, id responseObject)
      {
-         NSLog(@"Response: %ld", (long)[operation.response statusCode]);
-         NSLog(@"JSON: %@", responseObject);
+//         NSLog(@"JSON: %@", responseObject);
      }
           failure:
      ^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -548,7 +580,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [manager DELETE:urlString parameters:nil
             success:^(AFHTTPRequestOperation *operation, id responseObject)
      {
-         NSLog(@"JSON: %@", responseObject);
+//         NSLog(@"JSON: %@", responseObject);
      }
             failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"Error: %@", error);
@@ -565,11 +597,59 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [manager DELETE:urlString parameters:nil
             success:^(AFHTTPRequestOperation *operation, id responseObject)
      {
-         NSLog(@"JSON: %@", responseObject);
+//         NSLog(@"JSON: %@", responseObject);
      }
             failure:^(AFHTTPRequestOperation *operation, NSError *error) {
          NSLog(@"Error: %@", error);
     }];
+}
+
+
+
+
+
+#pragma mark - Saving and Loading data
+
+- (void)saveData
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSData *encodedBookList = [NSKeyedArchiver archivedDataWithRootObject:bookList];
+    NSData *encodedNameList = [NSKeyedArchiver archivedDataWithRootObject:checkoutNameList];
+    [defaults setObject:encodedBookList forKey:kBookList];
+    [defaults setObject:encodedNameList forKey:kNameList];
+    
+    [defaults synchronize];
+}
+
+- (void)loadData
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:kBookList] != nil)
+    {
+        NSData *encodedObject = [defaults objectForKey:kBookList];
+        NSArray *task = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
+        NSMutableArray *tempoArray = [[NSMutableArray alloc] initWithArray:task];
+        [bookList removeAllObjects];
+        
+        for (Book *book in tempoArray)
+        {
+            [bookList addObject:book];
+        }
+    }
+
+    if ([defaults objectForKey:kNameList] != nil)
+    {
+        NSData *encodedObject = [defaults objectForKey:kNameList];
+        NSMutableArray *tempoArray = [[NSMutableArray alloc] initWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:encodedObject]];
+        [checkoutNameList removeAllObjects];
+        
+        for (NSString *name in tempoArray)
+        {
+            [checkoutNameList addObject:name];
+        }
+    }
+    
+    [self.tableView reloadData];
 }
 
 @end

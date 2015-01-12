@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AddBookViewController.h"
+#import "BookDetailViewController.h"
 
-@interface MainViewController : UITableViewController <UIActionSheetDelegate,  UISearchDisplayDelegate, AddBookViewControllerDelegate, bookDetailViewControllerDelegate>
+@interface MainViewController : UITableViewController <UIActionSheetDelegate,  UISearchDisplayDelegate, AddBookViewControllerDelegate, BookDetailViewControllerDelegate>
 {
     NSString        *sortingType;
     NSUInteger      chosenBookIndex;
@@ -19,5 +20,7 @@
 @property (strong, nonatomic) NSMutableArray    *bookList;
 @property (strong, nonatomic) NSMutableArray    *checkoutNameList;
 
-@end
+- (void)saveData;
+- (void)loadData;
 
+@end

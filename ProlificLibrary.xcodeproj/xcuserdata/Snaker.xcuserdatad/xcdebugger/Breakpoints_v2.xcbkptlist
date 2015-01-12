@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ProlificLibrary/MainViewController.m"
-            timestampString = "442096096.663592"
+            timestampString = "442721987.047728"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
             landmarkName = "-didReceiveMemoryWarning"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,12 +42,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ProlificLibrary/Book.m"
-            timestampString = "442618131.703371"
+            timestampString = "442716141.847534"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "-initWithAuthor:andCategories:andLastCheckOut:andLastCheckOutBy:andPublisher:andTitle:andURL:andAvailability:andID:"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
+            landmarkName = "-initWithAuthor:andCategories:andLastCheckIn:andLastCheckOut:andLastCheckOutBy:andPublisher:andTitle:andURL:andAvailability:andID:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

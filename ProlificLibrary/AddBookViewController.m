@@ -39,6 +39,7 @@
     currentID += 1;
     Book *newBook = [[Book alloc] initWithAuthor:[bookAuthorTextField text]
                                    andCategories:[bookCategoriesTextField text]
+                                  andLastCheckIn:nil
                                  andLastCheckOut:nil
                                andLastCheckOutBy:@""
                                     andPublisher:[bookPublisherTextField text]

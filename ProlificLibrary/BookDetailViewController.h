@@ -9,19 +9,24 @@
 #import <UIKit/UIKit.h>
 #import "Book.h"
 
-@protocol bookDetailViewControllerDelegate <NSObject>
+@protocol BookDetailViewControllerDelegate <NSObject>
 
-- (void)bookCheckoutWithBook:(Book*)book;
+- (void)bookCheckoutWithBook:(Book*)book andName:(NSString*)name;
 
 @end
 
-@interface BookDetailViewController : UIViewController <UIActionSheetDelegate, UITextFieldDelegate>
+@interface BookDetailViewController : UIViewController <UIActionSheetDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 {
     float checkoutViewTopSpaceContraintConstant;
+    
+    NSString *pickerViewSelectedName;
 }
 
-@property (assign, nonatomic) id<bookDetailViewControllerDelegate>  delegate;
+@property (assign, nonatomic) id<BookDetailViewControllerDelegate>  delegate;
 @property (strong, nonatomic) Book  *currentBook;
+
+@property (strong, nonatomic) NSMutableArray  *nameList;
+@property (weak, nonatomic) IBOutlet UIPickerView *namePickerView;
 
 @property (weak, nonatomic) IBOutlet UILabel  *bookTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel  *bookAuthorLabel;

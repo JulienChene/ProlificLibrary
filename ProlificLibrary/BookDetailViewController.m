@@ -17,6 +17,9 @@
 @synthesize delegate;
 @synthesize currentBook;
 
+@synthesize nameList;
+@synthesize namePickerView;
+
 @synthesize bookTitleLabel;
 @synthesize bookAuthorLabel;
 @synthesize bookPublisherLabel;
@@ -49,6 +52,7 @@
 {
     [super viewDidLoad];
     
+    NSLog(@"viewDidLoad");
     checkoutViewTopSpaceContraintConstant = 0;
 }
 
@@ -101,6 +105,8 @@
     // Hiding cover view
     coverViewTopSpaceConstraint.constant = [[UIScreen mainScreen] bounds].size.height;
     coverViewBottomSpaceConstraint.constant = - [[UIScreen mainScreen] bounds].size.height;
+ 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardNotification:) name:UIKeyboardDidShowNotification object:nil];
     
     return [super viewWillAppear:animated];
 }
@@ -169,6 +175,32 @@
     [bookCheckOutSlider setValue:sliderValue];
 }
 
+- (void)checkIfBookExistsWithName:(NSString*)name
+{
+    // Check if the name is not already present
+    int namePosition = 0;
+    Boolean doesNameExist = false;
+    
+    while (namePosition < [nameList count])
+    {
+        if ([name isEqualToString:[nameList objectAtIndex:namePosition]])
+        {
+            doesNameExist = true;
+            break;
+        }
+        namePosition++;
+    }
+    
+    if (!doesNameExist)
+        [nameList addObject:name];
+    else
+    {
+        [nameList removeObjectAtIndex:namePosition];
+        [nameList insertObject:name atIndex:0];
+    }
+}
+
+
 
 
 
@@ -195,6 +227,7 @@
             }];
         }
         space = -[[UIScreen mainScreen] bounds].size.width;
+        [nameTextField resignFirstResponder];
     }
     
     [UIView animateWithDuration:0.5 animations:^{
@@ -232,8 +265,14 @@
 
 - (IBAction)doneButtonPressed:(id)sender
 {
+    float secondsToDelay = 0;
+    if ([nameTextField isFirstResponder]) {
+        secondsToDelay = 0.5;
+    }
+    
     [nameTextField resignFirstResponder];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, secondsToDelay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.5 animations:^{
             checkoutViewTopSpaceConstraint.constant = checkoutViewTopSpaceContraintConstant;
             
@@ -251,11 +290,38 @@
         [currentBook setBookLastCheckedOutBy:[nameTextField text]];
         [currentBook setBookAvailability:0];
         
+        [self checkIfBookExistsWithName:[nameTextField text]];
+        
         [self bookCheckOutHandler];
-        [delegate bookCheckoutWithBook:currentBook];
+        [delegate bookCheckoutWithBook:currentBook andName:[nameTextField text]];
+        
+        // Now the book can be checked out
+        [checkoutButton setTitle:@"Check In" forState:UIControlStateNormal];
+        
+        // Updating UI
+        [nameTextField setText:@""];
+        [namePickerView reloadAllComponents];
     }
     
-    [checkoutButton setTitle:@"Check In" forState:UIControlStateNormal];
+    if ((nameViewLeadingSpaceConstraint.constant != 0) && (![[nameTextField text] isEqualToString:@""]))
+    {
+        [currentBook setBookLastCheckedOut:[NSDate date]];
+        [currentBook setBookLastCheckedOutBy:pickerViewSelectedName];
+        [currentBook setBookAvailability:0];
+        
+        [self checkIfBookExistsWithName:pickerViewSelectedName];
+        
+        [self bookCheckOutHandler];
+        [delegate bookCheckoutWithBook:currentBook andName:pickerViewSelectedName];
+        
+        // Now the book can be checked out
+        [checkoutButton setTitle:@"Check In" forState:UIControlStateNormal];
+        
+        // Updating UI
+        [nameTextField setText:@""];
+        [namePickerView reloadAllComponents];
+    }
+
 }
 
 - (IBAction)shareButtonPressed:(id)sender
@@ -267,6 +333,33 @@
                                                     otherButtonTitles:@"Facebook", @"Twitter", nil];
     
     [actionSheet showFromBarButtonItem:sender animated:YES];
+}
+
+
+
+
+
+
+#pragma mark - PickerView Data Source and Delegate
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return [nameList count];
+}
+
+- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [nameList objectAtIndex:row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    pickerViewSelectedName = [nameList objectAtIndex:row];
 }
 
 
@@ -303,13 +396,6 @@
 
 
 #pragma mark - TextField Delegate
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardNotification:) name:UIKeyboardDidShowNotification object:nil];
-    
-    return YES;
-}
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {

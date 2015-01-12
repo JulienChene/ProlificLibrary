@@ -308,6 +308,10 @@
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="600" id="MCw-jA-uRX"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outlet property="dataSource" destination="3nN-bG-J7n" id="ZiB-DA-mSf"/>
+                                                            <outlet property="delegate" destination="3nN-bG-J7n" id="FLc-Zv-uD0"/>
+                                                        </connections>
                                                     </pickerView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enter name:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iaH-rW-0S5">
                                                         <rect key="frame" x="8" y="37" width="93" height="21"/>
@@ -397,6 +401,7 @@
                         <outlet property="coverViewBottomSpaceConstraint" destination="ZGU-Yb-nIZ" id="eef-Pf-KDq"/>
                         <outlet property="coverViewTopSpaceConstraint" destination="rkS-g4-NrH" id="gzU-CU-2Ng"/>
                         <outlet property="daysToGoLabel" destination="CIt-ck-uTI" id="kmt-Dj-iWL"/>
+                        <outlet property="namePickerView" destination="qv9-6V-3Va" id="1tK-dG-SAA"/>
                         <outlet property="nameTextField" destination="mcR-k0-QM5" id="ghT-Z0-noL"/>
                         <outlet property="nameTextFieldLeadingSpaceConstraint" destination="ONc-26-ba1" id="vfR-p3-Mms"/>
                         <outlet property="nameTextFieldWidthConstraint" destination="Jwe-rw-XQS" id="YPg-lM-xUs"/>
