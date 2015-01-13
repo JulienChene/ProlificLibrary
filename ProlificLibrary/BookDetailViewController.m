@@ -52,7 +52,6 @@
 {
     [super viewDidLoad];
     
-    NSLog(@"viewDidLoad");
     checkoutViewTopSpaceContraintConstant = 0;
 }
 
@@ -111,6 +110,7 @@
     return [super viewWillAppear:animated];
 }
 
+// Updates UI components in relation to checkout
 - (void)bookCheckOutHandler
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -153,6 +153,7 @@
     [bookCheckOutSlider setValue:sliderValue];
 }
 
+// Function called when a book is checked in or out
 - (void)bookCheckInHandler
 {
     // DaysToGo Label
@@ -175,6 +176,7 @@
     [bookCheckOutSlider setValue:sliderValue];
 }
 
+// Handles the names when a book is added, not letting two same names in the list
 - (void)checkIfBookExistsWithName:(NSString*)name
 {
     // Check if the name is not already present
@@ -192,12 +194,11 @@
     }
     
      if (!doesNameExist)
-        [nameList addObject:name];
+        [nameList insertObject:name atIndex:0];
     else
     {
-         [nameList insertObject:name atIndex:0];
+        [nameList insertObject:name atIndex:0];
         [nameList removeObjectAtIndex:namePosition + 1];
-        NSLog(@"Done");
     }
  }
 
@@ -209,6 +210,7 @@
 
 #pragma mark - Gesture recognizer
 
+// Swipe between textField or pickerView
 - (void)swipe:(UISwipeGestureRecognizer*)gestureRecognizer
 {
     float space = 0;
@@ -246,6 +248,7 @@
 
 #pragma mark - Buttons pressed
 
+// Handles checkout button switching to Check in or checkout
 - (IBAction)checkoutButtonPressed:(id)sender
 {
     if ([[[checkoutButton titleLabel] text] isEqualToString:@"Checkout"])
@@ -284,7 +287,7 @@
         }];
     });
     
-    // If the textfield is out
+    // If the textfield is visible
     if ((nameViewLeadingSpaceConstraint.constant == 0) && (![[nameTextField text] isEqualToString:@""]))
     {
         [currentBook setBookLastCheckedOut:[NSDate date]];
@@ -304,10 +307,10 @@
         [namePickerView reloadAllComponents];
     }
     
+    // If the picker view is visible
     if (nameViewLeadingSpaceConstraint.constant != 0)
     {
         NSString *name = [nameList objectAtIndex:[namePickerView selectedRowInComponent:0]];
-        NSLog(@"Name: %@", name);
         
         [currentBook setBookLastCheckedOut:[NSDate date]];
         [currentBook setBookLastCheckedOutBy:name];
@@ -328,6 +331,7 @@
 
 }
 
+// Handles the social medias
 - (IBAction)shareButtonPressed:(id)sender
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Share With"
@@ -361,11 +365,6 @@
     return [nameList objectAtIndex:row];
 }
 
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    NSLog(@"picker delegate");
-    pickerViewSelectedName = [nameList objectAtIndex:row];
-}
 
 
 
@@ -375,6 +374,7 @@
 
 #pragma mark - ActionSheet Delegate
 
+// Handles Facebook and Twitter
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *initialText = [NSString stringWithFormat:@"%@ - %@", [currentBook bookTitle], [currentBook bookAuthor]];
@@ -402,6 +402,7 @@
 
 #pragma mark - TextField Delegate
 
+// When end edditing, lower the keyboard
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
     [UIView animateWithDuration:0.5 animations:^{
@@ -413,6 +414,7 @@
     return YES;
 }
 
+// When the keyboard rises, rise the view
 - (void)keyboardNotification:(NSNotification*)notification
 {
     CGFloat keyboardHeight = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;

@@ -20,8 +20,6 @@
 
 @synthesize addBookButton;
 
-// TODO : Add ID (URL) and AFNetworking
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];

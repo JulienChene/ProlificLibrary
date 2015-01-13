@@ -40,6 +40,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     sortingType = @"None";
     chosenBookIndex = 0;
     
+    // Enables to call saveData from the appDelegate
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     appDelegate.mainVC = self;
     
@@ -48,6 +49,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [self retrieveBooks];
     [self.tableView reloadData];
     
     return [super viewWillAppear:animated];
@@ -65,6 +67,8 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 #pragma mark - Book List Processing
 
+// Detects whether the item is in stock according to the last check in
+// Returns the number of days since then
 - (int)isInStockWithLastCheckIn:(NSDate*)lastCheckIn andLastCheckOut:(NSDate*)lastCheckOut
 {
     if (lastCheckIn != nil || lastCheckOut == nil)
@@ -77,6 +81,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     return timeDifference;
 }
 
+// Updates the book list after retrieved from the server
 - (void)updateBookListWithArray:(NSArray*)newList
 {
     for (NSDictionary *dict in newList)
@@ -128,13 +133,13 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
                                                   andURL:[dict objectForKey:@"url"]
                                          andAvailability:[self isInStockWithLastCheckIn:nil andLastCheckOut:checkedOutDate]
                                                    andID:[ID intValue]];
-            NSLog(@"Adding book with ID: %d", [newBook bookID]);
             
             [bookList addObject:newBook];
         }
     }
 }
 
+// Sort the list of books according to Author, Title or Stock
 - (void)sortListBy:(NSString*)type
 {
     if ([type isEqualToString:kAuthorSort])
@@ -211,7 +216,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         book = [searchResults objectAtIndex:indexPath.row];
     else
         book = [bookList objectAtIndex:indexPath.row];
-    NSLog(@"Book ID:  %d", [book bookID]);
+
     UILabel *bookTitleLabel = (UILabel *)[cell viewWithTag:100];
     [bookTitleLabel setText:[book bookTitle]];
     
@@ -259,7 +264,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         [self deleteBookWithURL:[[self.bookList objectAtIndex:indexPath.row] bookURL]];
         [self.bookList removeObjectAtIndex:indexPath.row];
         
-        [tableView reloadData]; // tell table to refresh now
+        [tableView reloadData];
     }
 }
 
@@ -271,6 +276,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 #pragma mark - Action Sheet
 
+// Organizing button
 - (IBAction)organizeList:(id)sender
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Organize"
@@ -282,6 +288,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [actionSheet showInView:[self view]];
 }
 
+// Action sheet delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0)
@@ -324,8 +331,10 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 
 
+
 #pragma mark - AddBookViewController Delegate and BookDetailViewController Delegate
 
+// AddBookVC Delegate function
 - (void)addBookWithBook:(Book *)book
 {
     [bookList addObject:book];
@@ -335,9 +344,11 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [self sendBookWithParams:params];
     
     [self sortListBy:sortingType];
+    [self saveData];
     [self.tableView reloadData];
 }
 
+// Function to lighten the above function
 - (NSDictionary*)setParamsBeforeSendWithBook:(Book*)book
 {
     NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObjects:[book bookAuthor], [book bookTitle], [book bookCategories], nil]
@@ -369,6 +380,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     return params;
 }
 
+// BookDetailVC delegate function
 - (void)bookCheckoutWithBook:(Book *)book andName:(NSString *)name
 {
     int i = 0;
@@ -402,18 +414,17 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     }
     
     if (!doesNameExist)
-        [checkoutNameList addObject:name];
+        [checkoutNameList insertObject:name atIndex:0];
     else
     {
-        NSLog(@"Insert object at index %d", namePosition);
         [checkoutNameList insertObject:name atIndex:0];
         [checkoutNameList removeObjectAtIndex:namePosition + 1];
-        NSLog(@"Done");
     }
     
+    // If the list of names is too long, keep it to 10
     if ([checkoutNameList count] > 10)
         [checkoutNameList removeObjectAtIndex:10];
-    
+
     [self saveData];
 }
 
@@ -462,7 +473,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
             if ([book bookID] > maxID)
                 maxID = [book bookID];
         }
-        NSLog(@"max ID: %d", maxID);
+
         [addBookViewController setDelegate:self];
         [addBookViewController setCurrentID:maxID];
     }
@@ -512,6 +523,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 #pragma mark - AFNetworking
 
+// Calls retrieving the list of all the books
 - (void)retrieveBooks
 {
     NSString *string = @"http://prolific-interview.herokuapp.com/5488c4836aed89000761c2f4/books";
@@ -522,7 +534,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     operation.responseSerializer = [AFJSONResponseSerializer serializer];
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"%@", responseObject);
+//        NSLog(@"%@", responseObject);
         NSArray *responseList = (NSArray *)responseObject;
         [self updateBookListWithArray:responseList];
         [self.tableView reloadData];
@@ -618,6 +630,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
 
 - (void)saveData
 {
+    NSLog(@"saveData");
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSData *encodedBookList = [NSKeyedArchiver archivedDataWithRootObject:bookList];
     NSData *encodedNameList = [NSKeyedArchiver archivedDataWithRootObject:checkoutNameList];
@@ -625,9 +638,6 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
     [defaults setObject:encodedNameList forKey:kNameList];
     
     [defaults synchronize];
-    
-    for (Book* book in bookList)
-        NSLog(@"\tSave Book ID: %d", [book bookID]);
 }
 
 - (void)loadData
@@ -641,10 +651,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         [bookList removeAllObjects];
         
         for (Book *book in tempoArray)
-        {
             [bookList addObject:book];
-            NSLog(@"\tLoad BookID: %d", [book bookID]);
-        }
     }
 
     if ([defaults objectForKey:kNameList] != nil)
@@ -654,9 +661,7 @@ NSString *const kAvailabilitySort = @"SortByAvailability";
         [checkoutNameList removeAllObjects];
         
         for (NSString *name in tempoArray)
-        {
             [checkoutNameList addObject:name];
-        }
     }
 }
 
